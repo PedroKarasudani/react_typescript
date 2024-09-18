@@ -7,7 +7,7 @@ import './Style.css';
 const App = () => {
   return (
     <DataContextProvider>
-      <div>
+      <div className="container">
         <Slidenav />
         <main>
           <Header />
