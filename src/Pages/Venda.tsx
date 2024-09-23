@@ -1,3 +1,4 @@
+import Loading from '../Components/Loading';
 import { IVenda } from '../Context/DataContext';
 import useFetch from '../Hooks/useFetch';
 import { useParams } from 'react-router-dom';
@@ -11,6 +12,7 @@ const Venda = () => {
     `https://data.origamid.dev/vendas/${id}`,
   );
 
+  if (loading === true) return <Loading />;
   if (data === null) return null;
   return (
     <div>
