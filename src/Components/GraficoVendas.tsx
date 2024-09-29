@@ -8,16 +8,40 @@ import {
 } from 'recharts';
 import { IVenda } from '../Context/DataContext';
 
-const dadosGrafico = [
-  { data: '2023-05-03', pago: 3100, processando: 3000, falha: 2000 },
-  { data: '2023-05-04', pago: 310, processando: 300, falha: 200 },
-  { data: '2023-05-04', pago: 4000, processando: 3900, falha: 2900 },
-];
+type VendaDia = {
+  data: string;
+  pago: number;
+  falha: number;
+  processando: number;
+};
+
+function transformData(data: IVenda[]): VendaDia[] {
+  const dias = data.reduce((acc: { [key: string]: VendaDia }, item) => {
+    const dia = item.data.split(' ')[0];
+    if (!acc[dia]) {
+      acc[dia] = {
+        data: dia,
+        pago: 0,
+        falha: 0,
+        processando: 0,
+      };
+    }
+    acc[dia][item.status] += item.preco;
+    return acc;
+  }, {});
+
+  return Object.values(dias).map((dia) => ({
+    ...dia,
+    data: dia.data.substring(5),
+  }));
+}
 
 const GraficoVendas = ({ data }: { data: IVenda[] }) => {
+  const transformedData = transformData(data);
+
   return (
     <ResponsiveContainer width="99%" height={400}>
-      <LineChart data={dadosGrafico}>
+      <LineChart data={transformedData}>
         <XAxis dataKey="data" />
         <YAxis />
         <Tooltip />
